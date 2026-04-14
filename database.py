@@ -21,7 +21,7 @@ class MySQLConnection:
     A database wrapper class used to connect to MySQL databases and interact with them.
     """
 
-    def __init__(self, **kwargs: Unpack[ConnectionArgs]):
+    def __init__(self, **kwargs: Unpack[ConnectionArgs]) -> None:
         """
         Creates a new database connectio to a MySQL database. Make sure to provide necessary arguments to make the connection
         """
