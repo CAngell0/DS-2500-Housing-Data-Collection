@@ -1,24 +1,30 @@
 import os
-from dotenv import load_dotenv
 import requests
+from dotenv import load_dotenv
 
 from database import MySQLConnection
 from utils import *
+
 # Load environment variables
 load_dotenv();
 
-database = MySQLConnection()
+# Connect to the MySQL database with environment variable settings
+database = MySQLConnection(
+    host = str( os.getenv('DB_HOST') ),
+    user = str( os.getenv('DB_USER') ),
+    password = str( os.getenv('DB_PASSWORD') ),
+    database = str( os.getenv('DB_DATABASE') )
+)
 
-page_offset = 0
-
-
-def get_listings(state: str, city: str):
+# Method used to make an API call to RentCast
+def get_listings(state: str, city: str, offset: int):
     """
-    Makes an API call to the RentCast API to retrieve current listing data on a specified region. Also increments
-    the page_offset variable to that it can keep track of what sale listings it has already pulled during the algorithm.
+    Makes an API call to the RentCast API to retrieve current listing data on a specified region.
 
     :param state: What state to pull listings from. Must be in 2-character state format (e.g. 'TX' or 'UT')
     :param city: What cit inside the state specified to pull listings from. Needs to be the full name and capitalized
+    :param offset: Offset index according to the pagination system outlined by the RentCast docs.
+    :return: Either a list or dictionary of the JSON data from the request. See requests.get().json().
     """
 
     # Makes a request to the RentCast API to retrieve sale listings data based on the location specified
@@ -32,7 +38,7 @@ def get_listings(state: str, city: str):
             'city': city,
             'status': 'Active',
             'limit': 500,
-            'offset': page_offset
+            'offset': offset
         }
     )
 
@@ -43,9 +49,14 @@ def get_listings(state: str, city: str):
     return response.json()
 
 
+page_offset = 0
+requests_made = 0
 
-data = get_listings('TX', 'Austin')
 
-with open('./response.txt', 'w') as file:
-    file.write(str(data))
+
+
+# data = get_listings('TX', 'Austin', 0)
+
+# with open('./response.txt', 'w') as file:
+#     file.write(str(data))
 

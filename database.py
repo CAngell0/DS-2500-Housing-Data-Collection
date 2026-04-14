@@ -1,35 +1,44 @@
-import os
+from typing import TypedDict, NotRequired, Unpack
 import mysql.connector
 
-from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv();
+# Type class used to document the kwargs in MySQLConnection
+class ConnectionArgs(TypedDict):
+    host: str
+    """  Host of the database to connect to (e.g. 'my.database.com') """
+    user: str
+    """  Username of the user credentials to use for the database connection """
+    password: str
+    """  Password associated with the user to log into the database """
+    database: NotRequired[str]
+    """  Database to connect to inside the MySQL instance """
 
+
+
+# A wrapper class used to interface with MySQL databases
 class MySQLConnection:
     """
     A database wrapper class used to connect to MySQL databases and interact with them.
     """
 
-    def __init__(self):
+    def __init__(self, **kwargs: Unpack[ConnectionArgs]):
         """
-        Creates a new database connectio to a MySQL database. Uses the following environment variables to make the
-        connection:
-
-        - DB_HOST -> Host of the database to connect to (e.g. 'my.database.com')
-        - DB_USER -> Username of the user credentials to use for the database connection
-        - DB_PASSWORD -> Password associated with the user to log into the database
-        - DB_DATABASE -> Database to connect to inside the MySQL instance
-
+        Creates a new database connectio to a MySQL database. Make sure to provide necessary arguments to make the connection
         """
 
-        print( 'Making connection to MySQL database..' )
-        self.db = mysql.connector.connect(
-            host = os.getenv('DB_HOST'),
-            user = os.getenv('DB_USER'),
-            password = os.getenv('DB_PASSWORD'),
-            database = os.getenv('DB_DATABASE')
-        )
+        # Get the kwargs values and put them in the input kwargs for mysql.connector.connect()
+        connection_kwargs = {
+            'host': kwargs.get('host'),
+            'user': kwargs.get('user'),
+            'password': kwargs.get('password')
+        }
+        
+        # If a database was specified, put it in the connection_kwargs
+        if (kwargs.get('database') != None): connection_kwargs['database'] = str(kwargs.get('database'))
+
+        # Start the connection to the database
+        print( 'Making connection to MySQL database...' )
+        self.db = mysql.connector.connect(**connection_kwargs)
 
         if self.db.is_connected():
             print( 'Successfully connected' )
