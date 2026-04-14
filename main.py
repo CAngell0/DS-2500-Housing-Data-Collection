@@ -1,24 +1,29 @@
 import os
-import sys
 from dotenv import load_dotenv
-import mysql.connector
+import requests
 
+from database import MySQLConnection
 # Load environment variables
 load_dotenv();
 
-# Connect to MySQL database to store collected data in
-db_connection = mysql.connector.connect(
-    host = os.getenv('DB_HOST'),
-    user = os.getenv('DB_USER'),
-    password = os.getenv('DB_PASSWORD'),
-    database = os.getenv('DB_DATABASE')
-);
+database = MySQLConnection()
 
-#
-if db_connection.is_connected():
-    print( 'Successfully connected to the database' )
-else:
-    sys.exit( 'Could not connecto to database, cannot run script.' )
+res = database.send('SHOW TABLES;')
 
-# Used to execute SQL queries on the database
-cursor = db_connection.cursor()
+
+# resp = requests.get('https://api.rentcast.io/v1/listings/sale',
+#     params = {
+#         'city': 'Austin',
+#         'state': 'TX',
+#         'status': 'Active'
+#     },
+#     headers = {
+#         'Accept': 'application/json'
+#     }
+# )
+
+# print(resp.json())
+
+# with open('./response.txt', 'w') as file:
+#     file.write(str(resp.json()))
+
