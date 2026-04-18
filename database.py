@@ -60,6 +60,7 @@ class MySQLConnection:
 
         data = []
         self.cursor.execute(query)
+        self.db.commit()
 
         for row in self.cursor.fetchall():
             data.append(row)
