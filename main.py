@@ -49,7 +49,7 @@ database = MySQLConnection(
 # Set up the rent cast API wrapper
 api = RentCastAPI(
     api_key = str( os.getenv('RENTCASE_API_KEY') ),
-    request_limit = 49
+    request_limit = 50
 )
 print('\t- Initialized RentCast API')
 
@@ -76,7 +76,6 @@ def log(message):
     # Append the log(s) to the file
     with open(log_folder / log_file_name, 'a') as file:
         file.write(formatted_message)
-
 
 
 
@@ -120,7 +119,6 @@ def handle_region_chunk(chunk):
 
 
 # Start making API calls and retrieve data from the configured regions. Both of the loops below will break of the API reaches its request limit or repeated errors are thrown (up to 5)
-
 print ('Starting data collection...\n')
 completed_regions = []
 for region in regions:
@@ -145,7 +143,7 @@ for region in regions:
     if (error_count < 5): 
         completed_regions.append(str(region))
         print(f': Region completed  |  ({api.offset} rows, {api.request_count} requests)  |  {str(region)}')
-    print(region)
+
     api.reset_offset()
 
 
