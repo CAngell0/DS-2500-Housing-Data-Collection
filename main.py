@@ -98,7 +98,7 @@ def handle_region_chunk(chunk):
         # Validate that its JSON matches what is expected
         try: pojo = Property(**property)
         except ValidationError: 
-            log_messages.append(f'Invalid property data recieved, could not add.\n\n{json.dumps(property, indent=4)}\n')
+            log_messages.append(f'Invalid property data received, could not add.\n\n{json.dumps(property, indent=4)}\n')
             continue
         
         # Convert the date value from unix to a more readable format that SQL understands and can parse into a DATE type
@@ -124,6 +124,7 @@ def handle_region_chunk(chunk):
 
 
 # Start making API calls and retrieve data from the configured regions. Both of the loops below will break of the API reaches its request limit or repeated errors are thrown (up to 5)
+
 completed_regions = []
 for region in TARGET_REGIONS:
     api.use_region(region)
@@ -142,6 +143,7 @@ for region in TARGET_REGIONS:
         time.sleep(1) # The rate limiting for the API is very low, but this is just to be save
     
     if (error_count < 5): completed_regions.append(str(region))
+    api.reset_offset()
 
 
 # Log a small yet descriptive summary of the script.

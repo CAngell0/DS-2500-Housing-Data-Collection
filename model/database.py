@@ -57,7 +57,7 @@ class MySQLConnection:
         Sends an SQL query to the database and returns the resulting data.
 
         :param query: SQL query to send to the database
-        :return: A list containg all the lines of the resulting data.
+        :return: A list containing all the lines of the resulting data.
         :rtype: list[str]
         """
 

@@ -39,15 +39,21 @@ class RentCastAPI:
         self.offset = 0
         pass
     
+    def reset_offset(self):
+        """
+        Resets the offset member variable to 0. This makes it ready for a new region entirely. Make sure to call this after a region has successfully been
+        received.
+        """
+        self.offset = 0
 
     def use_region(self, region: APISearchRegion):
         """
-        Set the region that the API will pull from when calling get_listings_chunk(). This method also resets the offset,
-        and region_is_complete member variables.
+        Set the region that the API will pull from when calling get_listings_chunk(). This method also resets the region_is_complete member variables.
+        However it does not reset the offset member variable. This is because the caller may want to set a manual offset to start on a certain page in the requests.
+        Make sure to call reset_offset() when the region data is done being collected.
         :param region: The region wrapper object to read from and reference internally
         """
         
-        self.offset = 0
         self.region = region
         self.region_is_complete = False
     
@@ -56,7 +62,7 @@ class RentCastAPI:
         Make an HTTP GET request to the /listings/sale RentCase endpoint. It will use the region that was configured with the
         use_region() method. If this method is called before a region is set, an exception will be thrown. Furthermore, if the
         request limit has been reached, it will also throw an exception. Exceptions from the requests.get() method are also 
-        propogated up.
+        propagated up.
 
         :return: A dictionary that holds the JSON listing data the was retrieved from the API call. If the region is flagged as complete
                  according to the pagination offset, and this method is called. It will return an empty list.
