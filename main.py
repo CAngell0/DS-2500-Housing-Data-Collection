@@ -138,8 +138,10 @@ for region in TARGET_REGIONS:
 
         try: chunk = api.get_listings_chunk()
         except Exception as err: 
-            log(f'Retrieval error occurred when getting listing data chunk:\n\t{err}\n')
+            log(f'Retrieval error occurred when getting listing data chunk: ({api.offset} offset)\n\t{err}\n')
+            print(f': Retrieval error occurred when getting listing data chunk ({api.offset} offset):\n\t{err}\n')
             error_count += 1
+            time.sleep(1)
             continue
         
         error_count = 0
@@ -148,7 +150,7 @@ for region in TARGET_REGIONS:
     
     if (error_count < 5): 
         completed_regions.append(str(region))
-        print(f': Region completed with {api.offset} rows, {str(region)}')
+        print(f': Region completed  |  ({api.offset} rows, {api.request_count} requests)  |  {str(region)}')
 
     api.reset_offset()
 
@@ -159,4 +161,5 @@ log(
         ''.join([f'\n\t{region}' for region in completed_regions]) +
         ''.join(['\n\n-- End of log file --'])
 )
+print('-- Script Finished --')
 

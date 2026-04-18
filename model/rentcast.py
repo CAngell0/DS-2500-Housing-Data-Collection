@@ -2,7 +2,6 @@
 # Date: 4/14/2026
 
 import requests
-import json
 
 # A simple class to wrap a region and its properties so that it can be used by the API wrapper
 class APISearchRegion:
@@ -72,7 +71,7 @@ class RentCastAPI:
         if (self.request_count >= self.request_limit): raise Exception('Request limit reached, cannot continue with request')
         if (self.region == None): raise Exception('A region has not be specified to use, cannot perform request')
         if (self.region_is_complete): return []
-        
+
         # Make the API request
         response_data = requests.get('https://api.rentcast.io/v1/listings/sale',
             headers = {
