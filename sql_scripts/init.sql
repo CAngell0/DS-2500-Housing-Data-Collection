@@ -1,7 +1,9 @@
+-- This script is used to initialize a MySQL database to be compatible with the script. It creates a new database called 'ds2500' in the MySQL server with the table below.
+
 -- Create the database used in the MySQL databse to store the data.
 CREATE DATABASE IF NOT EXISTS ds2500;
 
--- Create the houses table used for DS 2500 final project
+-- Create the properties table used for DS 2500 final project
 CREATE TABLE IF NOT EXISTS ds2500.properties (
     rentcast_id VARCHAR(255) NOT NULL PRIMARY KEY,
 

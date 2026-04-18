@@ -1,8 +1,11 @@
-import json
+# Author: Carson Angell
+# Date: 4/17/2026
+
 from pydantic import Field
 from pydantic import TypeAdapter
 from pydantic.dataclasses import dataclass
 
+# A POJO class used to validate and convert incoming JSON data from the API into a more accessible format for the developer (me)
 @dataclass
 class Property:
     rentcast_id: str = Field(alias = 'id')

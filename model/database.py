@@ -1,3 +1,6 @@
+# Author: Carson Angell
+# Date: 4/14/2026
+
 from typing import TypedDict, NotRequired, Unpack
 import mysql.connector
 
