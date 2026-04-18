@@ -15,8 +15,17 @@ from pydantic import ValidationError
 from model.database import MySQLConnection
 from model.rentcast import RentCastAPI, APISearchRegion
 from model.property import Property
+from model.regions import *
 
 error_count = 0
+
+# Takes user input from the terminal to choose which regions to gather data from
+selected_region = None
+while (selected_region != 'utah' and selected_region != 'colorado'):
+    selected_region = input('Enter which state you want to gather data from (\'utah\' or \'colorado\'): ').lower()
+
+
+
 
 # Create the log folder and log file for the script
 log_file_name = datetime.now().strftime('%Y-%m-%d') + '.txt'
@@ -24,7 +33,7 @@ log_folder = Path('./logs')
 
 log_folder.mkdir(exist_ok = True)
 with open(log_folder / log_file_name, 'w') as file: file.write('-- Start of log file for properties data collection script --\n')
-print('-- Starting Housing Data Collection Script --')
+print('\n-- Starting Housing Data Collection Script --')
 
 # Load environment variables
 load_dotenv();
@@ -44,25 +53,10 @@ api = RentCastAPI(
 )
 print('\t- Initialized RentCast API')
 
-# Configured regions for the script to target
-TARGET_REGIONS = [
-    APISearchRegion('UT', 40.634901, -111.917321, 15), # Salt Lake City Region
-    APISearchRegion('UT', 41.055363, -111.958598, 18), # Davis County Region
-    APISearchRegion('UT', 41.476743, -112.124352, 18), # Box Elder County Region
-    APISearchRegion('UT', 41.847091, -112.047417, 18), # Cache County Region
-    APISearchRegion('UT', 40.237791, -111.754837, 18), # Utah County Region #1
-    APISearchRegion('UT', 39.962990, -112.099077, 10), # Utah County Region #2
-    APISearchRegion('UT', 39.889470, -111.725948, 10), # Utah County Region #3
-    APISearchRegion('UT', 41.533898, -111.430000, 30), # Rich County Region (Uinta Mountains)
-    APISearchRegion('UT', 40.842864, -111.242393, 30), # Summit County Region
-    APISearchRegion('UT', 40.033250, -110.105717, 80), # Duchesne County Region
-    APISearchRegion('UT', 37.985132, -110.373004, 80), # Garfield County Region
-    APISearchRegion('UT', 37.812867, -112.968922, 40), # Iron County Region
-    APISearchRegion('UT', 37.159613, -113.492389, 18), # Washington County Region (St.George)
-    APISearchRegion('UT', 39.046094, -112.355125, 60), # Millard County Region
-    APISearchRegion('UT', 40.390796, -113.222394, 60), # Tooele County Region
-]
-print(f'\t- {len(TARGET_REGIONS)} regions loaded into script')
+# Load the regions based on the state that was selected at the beginning of the script
+regions = UTAH_REGIONS if selected_region == 'utah' else COLORADO_REGIONS
+print(f'\t- {selected_region.capitalize()} select, {len(regions)} regions loaded into script.')
+
 
 
 
@@ -129,7 +123,7 @@ def handle_region_chunk(chunk):
 
 print ('Starting data collection...\n')
 completed_regions = []
-for region in TARGET_REGIONS:
+for region in regions:
     api.use_region(region)
 
     # If the script encounters five errors in a row with retrieving the data from the api. The loop will stop along with the script
@@ -151,7 +145,7 @@ for region in TARGET_REGIONS:
     if (error_count < 5): 
         completed_regions.append(str(region))
         print(f': Region completed  |  ({api.offset} rows, {api.request_count} requests)  |  {str(region)}')
-
+    print(region)
     api.reset_offset()
 
 

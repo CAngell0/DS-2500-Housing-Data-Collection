@@ -2,6 +2,7 @@
 # Date: 4/14/2026
 
 import requests
+import json
 
 # A simple class to wrap a region and its properties so that it can be used by the API wrapper
 class APISearchRegion:
