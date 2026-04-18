@@ -98,7 +98,7 @@ def handle_region_chunk(chunk):
         log_messages.append(f'Retrieved property data for RentCase ID :  {pojo.rentcast_id}')
     
     # Final touch on the query to make it syntactically valid
-    sql_query = sql_query[:-1] + ';'
+    sql_query = sql_query[:-1] + '\nON DUPLICATE KEY UPDATE rentcast_id = rentcast_id;'
 
     # Send the query to the database and log any errors that may have occurred while doing so
     try: database.send(sql_query)
