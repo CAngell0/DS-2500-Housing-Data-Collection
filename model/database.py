@@ -40,11 +40,11 @@ class MySQLConnection:
         if (kwargs.get('database') != None): connection_kwargs['database'] = str(kwargs.get('database'))
 
         # Start the connection to the database
-        print( 'Making connection to MySQL database...' )
+        print( '\t- Connecting to MySQL database...' )
         self.db = mysql.connector.connect(**connection_kwargs)
 
         if self.db.is_connected():
-            print( 'Successfully connected' )
+            print( '\t- Successfully connected' )
         else:
             raise Exception('Could not connect to database, check environment variables and try again.')
         

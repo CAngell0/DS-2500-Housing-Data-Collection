@@ -72,7 +72,7 @@ class RentCastAPI:
         if (self.request_count >= self.request_limit): raise Exception('Request limit reached, cannot continue with request')
         if (self.region == None): raise Exception('A region has not be specified to use, cannot perform request')
         if (self.region_is_complete): return []
-
+        
         # Make the API request
         response_data = requests.get('https://api.rentcast.io/v1/listings/sale',
             headers = {

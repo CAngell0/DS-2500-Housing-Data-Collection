@@ -24,6 +24,7 @@ log_folder = Path('./logs')
 
 log_folder.mkdir(exist_ok = True)
 with open(log_folder / log_file_name, 'w') as file: file.write('-- Start of log file for properties data collection script --\n')
+print('-- Starting Housing Data Collection Script --')
 
 # Load environment variables
 load_dotenv();
@@ -41,6 +42,7 @@ api = RentCastAPI(
     api_key = str( os.getenv('RENTCASE_API_KEY') ),
     request_limit = 10
 )
+print('\t- Initialized RentCast API')
 
 # Configured regions for the script to target
 TARGET_REGIONS = [
@@ -60,7 +62,7 @@ TARGET_REGIONS = [
     APISearchRegion('UT', 39.046094, -112.355125, 60), # Millard County Region
     APISearchRegion('UT', 40.390796, -113.222394, 60), # Tooele County Region
 ]
-
+print(f'\t- {len(TARGET_REGIONS)} regions loaded into script')
 
 
 
@@ -125,10 +127,12 @@ def handle_region_chunk(chunk):
 
 # Start making API calls and retrieve data from the configured regions. Both of the loops below will break of the API reaches its request limit or repeated errors are thrown (up to 5)
 
+print ('Starting data collection...\n')
 completed_regions = []
 for region in TARGET_REGIONS:
     api.use_region(region)
 
+    # If the script encounters five errors in a row with retrieving the data from the api. The loop will stop along with the script
     while not api.region_is_complete and not error_count >= 5:
         chunk = None
 
@@ -142,7 +146,10 @@ for region in TARGET_REGIONS:
         handle_region_chunk(chunk)
         time.sleep(1) # The rate limiting for the API is very low, but this is just to be save
     
-    if (error_count < 5): completed_regions.append(str(region))
+    if (error_count < 5): 
+        completed_regions.append(str(region))
+        print(f': Region completed with {api.offset} rows, {str(region)}')
+
     api.reset_offset()
 
 
