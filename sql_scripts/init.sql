@@ -11,11 +11,11 @@ CREATE TABLE IF NOT EXISTS ds2500.properties (
     city CHAR(64) NOT NULL,
     zip INT NOT NULL,
 
-    sqft INT NOT NULL,
-    bedrooms INT NOT NULL,
-    bathrooms INT NOT NULL,
-    lot_size INT NOT NULL,
+    sqft FLOAT NOT NULL,
+    bedrooms FLOAT NOT NULL,
+    bathrooms FLOAT NOT NULL,
+    lot_size FLOAT NOT NULL,
     year_built INT NOT NULL,
-    listing_date DATE NOT NULL
+    listed_date DATE NOT NULL
 );
 

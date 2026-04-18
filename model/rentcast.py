@@ -1,3 +1,5 @@
+import json
+
 import requests
 
 class APISearchRegion:
@@ -7,6 +9,9 @@ class APISearchRegion:
         self.lon = lon
         self.radius = radius
         pass
+
+    def __str__(self) -> str:
+        return f'Region(state = \'{self.state}\', lat = {self.lat}, lon = {self.lon}, radius = {self.radius})'
 
 class RentCastAPI:
     def __init__(self, api_key: str, request_limit: int) -> None:
@@ -26,8 +31,10 @@ class RentCastAPI:
         if (self.region == None): raise Exception('A region has not be specified to use, cannot perform request')
         if (self.region_complete): return []
 
-        if (self.request_count == 5): response_data = [0] * 300
-        else: response_data = [0] * 500
+        testdata = ""
+        with open('./testdata.txt', 'r') as file:
+            testdata = file.read()
+        response_data = json.loads(testdata)
         # response_data = [0] * 300
         
 
@@ -53,5 +60,4 @@ class RentCastAPI:
         else: self.offset += 500
 
         print('Retrieved chunk');
-        # return response_data
-        return ""
+        return response_data

@@ -19,4 +19,4 @@ class Property:
     lot_size: int = Field(alias = 'lotSize')
 
     year_built: int = Field(alias = 'yearBuilt')
-    listing_date: str = Field(alias = 'listedDate')
+    listed_date: str = Field(alias = 'listedDate')
