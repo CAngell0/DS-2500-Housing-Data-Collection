@@ -40,7 +40,7 @@ database = MySQLConnection(
 # Set up the rent cast API wrapper
 api = RentCastAPI(
     api_key = str( os.getenv('RENTCASE_API_KEY') ),
-    request_limit = 10
+    request_limit = 49
 )
 print('\t- Initialized RentCast API')
 
@@ -89,8 +89,8 @@ def log(message):
 # Takes the full data of an API call, processes it and sends it to the database
 def handle_region_chunk(chunk):
     # Templates and scaffolding for the SQL query that imports the data
-    sql_query = 'INSERT INTO properties (rentcast_id, address, state, county, city, zip, sqft, bedrooms, bathrooms, lot_size, year_built, listed_date)\nVALUES'
-    row_template = '\n\t("{rentcast_id}", "{address}", "{state}", "{county}", "{city}", {zip}, {sqft}, {bedrooms}, {bathrooms}, {lot_size}, {year_built}, "{listed_date}"),'
+    sql_query = 'INSERT INTO properties (rentcast_id, address, state, county, city, zip, sqft, bedrooms, bathrooms, lot_size, price, year_built, listed_date)\nVALUES'
+    row_template = '\n\t("{rentcast_id}", "{address}", "{state}", "{county}", "{city}", {zip}, {sqft}, {bedrooms}, {bathrooms}, {lot_size}, {price}, {year_built}, "{listed_date}"),'
     log_messages = [] # Keeps track of errors and successful handlings
 
     # For every property that was retrieved...
@@ -141,12 +141,12 @@ for region in TARGET_REGIONS:
             log(f'Retrieval error occurred when getting listing data chunk: ({api.offset} offset)\n\t{err}\n')
             print(f': Retrieval error occurred when getting listing data chunk ({api.offset} offset):\n\t{err}\n')
             error_count += 1
-            time.sleep(1)
+            time.sleep(3)
             continue
         
         error_count = 0
         handle_region_chunk(chunk)
-        time.sleep(1) # The rate limiting for the API is very low, but this is just to be save
+        time.sleep(3) # The rate limiting for the API is very low, but this is just to be save
     
     if (error_count < 5): 
         completed_regions.append(str(region))

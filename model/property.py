@@ -16,10 +16,11 @@ class Property:
     city: str = Field(alias = 'city')
     zip: int = Field(alias = 'zipCode')
 
-    sqft: int = Field(alias = 'squareFootage')
-    bedrooms: int = Field(alias = 'bedrooms')
+    sqft: float = Field(alias = 'squareFootage')
+    bedrooms: float = Field(alias = 'bedrooms')
     bathrooms: float = Field(alias = 'bathrooms')
-    lot_size: int = Field(alias = 'lotSize')
+    lot_size: float = Field(alias = 'lotSize')
+    price: float = Field(alias = 'price')
 
     year_built: int = Field(alias = 'yearBuilt')
     listed_date: str = Field(alias = 'listedDate')

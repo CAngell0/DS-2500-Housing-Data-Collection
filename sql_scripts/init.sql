@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS ds2500.properties (
     bedrooms FLOAT NOT NULL,
     bathrooms FLOAT NOT NULL,
     lot_size FLOAT NOT NULL,
+    price FLOAT NOT NULL,
+
     year_built INT NOT NULL,
     listed_date DATE NOT NULL
 );
